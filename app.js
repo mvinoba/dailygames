@@ -49,9 +49,16 @@ function persistResults() {
 function renderGames() {
   gameLinks.innerHTML = games
     .map((game) => {
-      return `<a class="game-link" href="${game.url}" target="_blank" rel="noreferrer">
-        <span>${game.name}</span><span>Open</span>
-      </a>`;
+      const completed = Boolean(results[game.name]);
+      return `<div class="game-card${completed ? " is-complete" : ""}">
+        <a class="game-link" href="${game.url}" target="_blank" rel="noreferrer">
+          <span>${game.name}</span>
+          <span>${completed ? "Completed" : "Open"}</span>
+        </a>
+        <button class="paste-game" type="button" data-game="${game.name}">
+          ${completed ? "Replace Result" : "Paste Result"}
+        </button>
+      </div>`;
     })
     .join("");
 
@@ -99,6 +106,25 @@ function setStatus(message) {
   statusLine.textContent = message;
 }
 
+function saveGameResult(gameName, text) {
+  const resultText = text.trim();
+  if (!resultText) {
+    setStatus("Nothing to save yet.");
+    return false;
+  }
+
+  results[gameName] = {
+    raw: resultText,
+    summary: simplifyShare(resultText, gameName),
+    savedAt: new Date().toISOString(),
+  };
+  persistResults();
+  renderGames();
+  renderResults();
+  setStatus(`Saved ${gameName}.`);
+  return true;
+}
+
 function saveCurrentResult() {
   const text = shareInput.value.trim();
   if (!text) {
@@ -106,15 +132,7 @@ function saveCurrentResult() {
     return;
   }
 
-  const gameName = gameSelect.value;
-  results[gameName] = {
-    raw: text,
-    summary: simplifyShare(text, gameName),
-    savedAt: new Date().toISOString(),
-  };
-  persistResults();
-  renderResults();
-  setStatus(`Saved ${gameName}.`);
+  saveGameResult(gameSelect.value, text);
 }
 
 function renderResults() {
@@ -176,6 +194,23 @@ readClipboard.addEventListener("click", async () => {
   }
 });
 
+gameLinks.addEventListener("click", async (event) => {
+  const button = event.target.closest("[data-game]");
+  if (!button) {
+    return;
+  }
+
+  try {
+    const text = await navigator.clipboard.readText();
+    const gameName = button.dataset.game;
+    shareInput.value = text;
+    gameSelect.value = gameName;
+    saveGameResult(gameName, text);
+  } catch {
+    setStatus("Clipboard access was blocked. Paste manually into the text box.");
+  }
+});
+
 shareInput.addEventListener("input", () => {
   const text = shareInput.value.trim();
   if (text) {
@@ -203,6 +238,7 @@ copySummary.addEventListener("click", async () => {
 resetResults.addEventListener("click", () => {
   results = {};
   persistResults();
+  renderGames();
   renderResults();
   setStatus("Results reset.");
 });
@@ -215,6 +251,7 @@ savedResults.addEventListener("click", (event) => {
 
   delete results[button.dataset.remove];
   persistResults();
+  renderGames();
   renderResults();
   setStatus(`Removed ${button.dataset.remove}.`);
 });
