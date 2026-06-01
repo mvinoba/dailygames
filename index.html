@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Daily Games Tracker</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="shell">
+      <section class="games-panel" aria-labelledby="games-title">
+        <div class="section-heading">
+          <p class="eyebrow">Daily run</p>
+          <h1 id="games-title">Daily Games</h1>
+        </div>
+        <div id="gameLinks" class="game-links" aria-label="Game links"></div>
+      </section>
+
+      <section class="tracker" aria-labelledby="tracker-title">
+        <div class="tracker-header">
+          <div>
+            <p class="eyebrow">Share parser</p>
+            <h2 id="tracker-title">Paste or read clipboard results</h2>
+          </div>
+          <div class="actions">
+            <button id="readClipboard" class="primary" type="button">Read Clipboard</button>
+            <button id="copySummary" type="button">Copy Summary</button>
+          </div>
+        </div>
+
+        <label class="paste-label" for="shareInput">Shared result text</label>
+        <textarea
+          id="shareInput"
+          spellcheck="false"
+          placeholder="Paste a game share here, or click Read Clipboard after copying one."
+        ></textarea>
+
+        <div class="form-row">
+          <label for="gameSelect">Assign to</label>
+          <select id="gameSelect"></select>
+          <button id="saveResult" type="button">Save Result</button>
+          <button id="clearInput" type="button">Clear Paste</button>
+        </div>
+
+        <div class="status-line" id="statusLine" role="status" aria-live="polite"></div>
+
+        <section class="results-list" aria-labelledby="results-title">
+          <div class="results-heading">
+            <h3 id="results-title">Results</h3>
+            <button id="resetResults" class="danger" type="button">Reset</button>
+          </div>
+          <div id="savedResults" class="saved-results"></div>
+        </section>
+
+        <section class="summary-panel" aria-labelledby="summary-title">
+          <div class="summary-heading">
+            <h3 id="summary-title">Generated Summary</h3>
+            <span id="summaryCount"></span>
+          </div>
+          <textarea id="summaryOutput" readonly></textarea>
+        </section>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
