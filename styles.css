@@ -127,29 +127,66 @@ h3 {
   margin-top: 18px;
 }
 
-.game-link {
-  align-items: center;
+.game-card {
   background: #f6fbfa;
   border: 1px solid #c8dfdc;
+  border-radius: 8px;
+  display: grid;
+  gap: 8px;
+  padding: 8px;
+}
+
+.game-card.is-complete {
+  background: #edf8f0;
+  border-color: #65a979;
+}
+
+.game-link {
+  align-items: center;
   border-radius: 8px;
   color: #123936;
   display: flex;
   font-weight: 750;
   justify-content: space-between;
   min-height: 42px;
-  padding: 10px 12px;
+  padding: 6px 4px;
   text-decoration: none;
 }
 
 .game-link:hover {
-  background: #e9f5f3;
-  border-color: #87bdb7;
+  color: var(--accent-dark);
 }
 
 .game-link span:last-child {
   color: var(--muted);
   font-size: 0.86rem;
   font-weight: 700;
+}
+
+.game-card.is-complete .game-link span:last-child {
+  color: #1f7a3b;
+}
+
+.paste-game {
+  background: #ffffff;
+  border-color: #b9d8d4;
+  color: #123936;
+  width: 100%;
+}
+
+.paste-game:hover {
+  background: #e9f5f3;
+  color: #123936;
+}
+
+.game-card.is-complete .paste-game {
+  background: #1f7a3b;
+  border-color: #1f7a3b;
+  color: #ffffff;
+}
+
+.game-card.is-complete .paste-game:hover {
+  background: #17602e;
 }
 
 .tracker {
